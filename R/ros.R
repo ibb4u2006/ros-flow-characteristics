@@ -14,7 +14,7 @@ install_load <- function(packages){
 
 install_load(c("jpeg", "png", "plot3D", "magick"))
 
-insertImages <- function(raw_img_path)
+insert_images <- function(raw_img_path)
   {
 
   #' Read raw image
