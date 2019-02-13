@@ -2,5 +2,3 @@
 
 export(insert_images)
 import(jpeg)
-import(magick)
-import(plot3D)

@@ -7,7 +7,7 @@ Maintainer: Ibrahim Bello <ibb4u2006@yahoo.com>
 Description: Identify flow structures in Images taken from Rain-On-Snow Experiment
     This package identies the number of Capillary Barrier, Preferential and Matrix flow
     in images taken from Rain-On-Snow Experiment.
-Imports: jpeg, plot3D, magick
+Imports: jpeg
 License: MIT
 Encoding: UTF-8
 LazyData: true

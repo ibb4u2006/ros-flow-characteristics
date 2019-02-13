@@ -12,7 +12,7 @@ install_load <- function(packages){
   }
 }
 
-install_load(c("jpeg", "plot3D", "magick"))
+install_load(c("jpeg"))
 
 #' Image Processing of flow characteristics of rain-on-snow experiments
 #'
@@ -26,7 +26,7 @@ install_load(c("jpeg", "plot3D", "magick"))
 #' @examples
 #' insert_images()
 #'
-#' @import jpeg plot3D magick
+#' @import jpeg
 #' @export
 
 insert_images <- function(raw_img_path)
