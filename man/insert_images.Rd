@@ -14,6 +14,7 @@ Returns RDS data of the 2D plot of image inserted
 }
 \examples{
 insert_images()
+
 }
 \author{
 Ibrahim Bello, \email{ibb4u2006@yahoo.com}

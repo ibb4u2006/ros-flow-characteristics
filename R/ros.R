@@ -25,6 +25,9 @@ install_load(c("jpeg", "plot3D", "magick"))
 #'
 #' @examples
 #' insert_images()
+#'
+#' @import jpeg plot3D magick
+#' @export
 
 insert_images <- function(raw_img_path)
   {
