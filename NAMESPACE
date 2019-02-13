@@ -1,1 +1,2 @@
 exportPattern("^[[:alpha:]]+")
+import(jpeg, plot3D, magick)
