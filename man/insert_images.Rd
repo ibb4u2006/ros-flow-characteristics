@@ -2,8 +2,7 @@
 % Please edit documentation in R/ros.R
 \name{insert_images}
 \alias{insert_images}
-\title{Read raw image
-Apply thresholds}
+\title{Image Processing of flow characteristics of rain-on-snow experiments}
 \usage{
 insert_images(raw_img_path)
 }
@@ -11,6 +10,13 @@ insert_images(raw_img_path)
 Return matrix with applied threshold
 }
 \description{
-Read raw image
-Apply thresholds
+Returns RDS data of the 2D plot of image inserted
+}
+\examples{
+insert_images()
+}
+\author{
+Ibrahim Bello, \email{ibb4u2006@yahoo.com}
+
+Johanna Bloecher
 }

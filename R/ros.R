@@ -12,15 +12,27 @@ install_load <- function(packages){
   }
 }
 
-install_load(c("jpeg", "png", "plot3D", "magick"))
+install_load(c("jpeg", "plot3D", "magick"))
+
+#' Image Processing of flow characteristics of rain-on-snow experiments
+#'
+#' Returns RDS data of the 2D plot of image inserted
+#'
+#' @return Return matrix with applied threshold
+#'
+#' @author Ibrahim Bello, \email{ibb4u2006@@yahoo.com}
+#' @author Johanna Bloecher
+#'
+#' @examples
+#' insert_images()
 
 insert_images <- function(raw_img_path)
   {
 
-  #' Read raw image
+  # Read raw image
   raw_img <- readJPEG(raw_img_path)
 
-  #  plot image
+  # plot image
   raw_img_green <- t(raw_img[,,2])#  greem channel
   raw_img_blue <- t(raw_img[,,3])#  blue channel
   raw_img_red <- t(raw_img[,,1])#  best visual contrast is 1, red channel
@@ -29,10 +41,10 @@ insert_images <- function(raw_img_path)
   thresh_img_blue <- raw_img_blue
   thresh_img_red <- raw_img_red
 
-  #  meaningless, just for dimensions
+  # meaningless, just for dimensions
   thresh_img <- raw_img_red
 
-  #' Apply thresholds
+  # Apply thresholds
   log_thresh_db <- thresh_img_red < 0.15
   log_thresh1 <- thresh_img_red < 0.3 & thresh_img_red >= 0.15 & thresh_img_blue > 0.4
   log_thresh2 <- thresh_img_red < 0.4 & thresh_img_red >= 0.3 & thresh_img_blue > 0.5
@@ -70,8 +82,5 @@ insert_images <- function(raw_img_path)
       }
     }
   }
-
-  #' @return Return matrix with applied threshold
   return(thresh_img)
 }
-
