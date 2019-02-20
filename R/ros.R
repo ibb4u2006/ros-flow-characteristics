@@ -16,14 +16,19 @@ install_load(c("jpeg"))
 
 #' Image Processing of flow characteristics of rain-on-snow experiments
 #'
-#' Returns RDS data of the 2D plot of image inserted
+#' Input data must be in matrix where the length of the matrix is 3 (rows, columns, three arrays)
+#' each of the three arrays is the R, G and B values
+#' Returns RDS data of the input
 #'
 #' @return Return matrix with applied threshold
 #'
 #' @author Ibrahim Bello, \email{ibb4u2006@@yahoo.com}
 #'
 #' @examples
-#' insert_images()
+#' ## To process raw image
+#' raw_image <- readJPEG('path to image')
+#' ## Apply threshold to the raw image data
+#' apply_threshold(raw_image)
 #'
 #' @import jpeg
 #' @export

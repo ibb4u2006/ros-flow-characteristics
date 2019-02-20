@@ -10,10 +10,14 @@ apply_threshold(raw_data)
 Return matrix with applied threshold
 }
 \description{
+Input data must be 3 in length (rows, columns, number of rgb arrays)
 Returns RDS data of the 2D plot of image inserted
 }
 \examples{
-insert_images()
+## To process raw image
+raw_image <- readJPEG('path to image')
+## Apply threshold to the raw image data
+apply_threshold(raw_image)
 
 }
 \author{
