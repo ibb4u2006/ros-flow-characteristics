@@ -10,8 +10,9 @@ apply_threshold(raw_data)
 Return matrix with applied threshold
 }
 \description{
-Input data must be 3 in length (rows, columns, number of rgb arrays)
-Returns RDS data of the 2D plot of image inserted
+Input data must be in matrix where the length of the matrix is 3 (rows, columns, three arrays)
+each of the three arrays is the R, G and B values
+Returns RDS data of the input
 }
 \examples{
 ## To process raw image
