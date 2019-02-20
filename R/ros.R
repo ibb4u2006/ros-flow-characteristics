@@ -21,7 +21,6 @@ install_load(c("jpeg"))
 #' @return Return matrix with applied threshold
 #'
 #' @author Ibrahim Bello, \email{ibb4u2006@@yahoo.com}
-#' @author Johanna Bloecher
 #'
 #' @examples
 #' insert_images()
@@ -29,54 +28,53 @@ install_load(c("jpeg"))
 #' @import jpeg
 #' @export
 
-insert_images <- function(raw_img_path)
+apply_threshold <- function(raw_data)
   {
 
-  # Read raw image
-  raw_img <- readJPEG(raw_img_path)
+  if(!is.numeric(raw_data)) stop("Provided input is not numeric")
 
   # plot image
-  raw_img_green <- t(raw_img[,,2])#  greem channel
-  raw_img_blue <- t(raw_img[,,3])#  blue channel
-  raw_img_red <- t(raw_img[,,1])#  best visual contrast is 1, red channel
+  raw_data_green <- t(raw_data[,,2])#  greem channel
+  raw_data_blue <- t(raw_data[,,3])#  blue channel
+  raw_data_red <- t(raw_data[,,1])#  best visual contrast is 1, red channel
 
-  thresh_img_green <- raw_img_green
-  thresh_img_blue <- raw_img_blue
-  thresh_img_red <- raw_img_red
+  thresh_data_green <- raw_data_green
+  thresh_data_blue <- raw_data_blue
+  thresh_data_red <- raw_data_red
 
   # meaningless, just for dimensions
-  thresh_img <- raw_img_red
+  thresh_data <- raw_data_red
 
   # Apply thresholds
-  log_thresh_db <- thresh_img_red < 0.15
-  log_thresh1 <- thresh_img_red < 0.3 & thresh_img_red >= 0.15 & thresh_img_blue > 0.4
-  log_thresh2 <- thresh_img_red < 0.4 & thresh_img_red >= 0.3 & thresh_img_blue > 0.5
+  log_thresh_db <- thresh_data_red < 0.15
+  log_thresh1 <- thresh_data_red < 0.3 & thresh_data_red >= 0.15 & thresh_data_blue > 0.4
+  log_thresh2 <- thresh_data_red < 0.4 & thresh_data_red >= 0.3 & thresh_data_blue > 0.5
 
-  log_thresh3 <- thresh_img_red >= 0.6 & thresh_img_red < 0.65 & thresh_img_blue > 0.85
-  log_thresh4 <- thresh_img_red > 0.4 & thresh_img_red < 0.6 & thresh_img_blue > 0.7
-  log_thresh5 <- thresh_img_red > 0.4 & thresh_img_red < 0.6 & thresh_img_blue > 0.6 & thresh_img_green > 0.65
+  log_thresh3 <- thresh_data_red >= 0.6 & thresh_data_red < 0.65 & thresh_data_blue > 0.85
+  log_thresh4 <- thresh_data_red > 0.4 & thresh_data_red < 0.6 & thresh_data_blue > 0.7
+  log_thresh5 <- thresh_data_red > 0.4 & thresh_data_red < 0.6 & thresh_data_blue > 0.6 & thresh_data_green > 0.65
 
   for( i in 1:nrow(log_thresh1)){
     for( j in 1:ncol(log_thresh1)){
       if(log_thresh_db[i,j]){
-        thresh_img[i,j] <- 3
+        thresh_data[i,j] <- 3
       }else{
         if(log_thresh1[i,j]){
-          thresh_img[i,j] <- 2
+          thresh_data[i,j] <- 2
         }else{
           if(log_thresh2[i,j]){
-            thresh_img[i,j] <- 2
+            thresh_data[i,j] <- 2
           }else{
             if(log_thresh3[i,j]){
-              thresh_img[i,j] <- 1
+              thresh_data[i,j] <- 1
             }else{
               if(log_thresh4[i,j]){
-                thresh_img[i,j] <- 1
+                thresh_data[i,j] <- 1
               }else{
                 if(log_thresh5[i,j]){
-                  thresh_img[i,j] <- 1
+                  thresh_data[i,j] <- 1
                 }else{
-                  thresh_img[i,j] <- 0
+                  thresh_data[i,j] <- 0
                 }
               }
             }
@@ -85,5 +83,5 @@ insert_images <- function(raw_img_path)
       }
     }
   }
-  return(thresh_img)
+  return(thresh_data)
 }
