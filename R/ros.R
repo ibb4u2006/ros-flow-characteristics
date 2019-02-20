@@ -31,7 +31,10 @@ install_load(c("jpeg"))
 apply_threshold <- function(raw_data)
   {
 
-  if(!is.numeric(raw_data)) stop("Provided input is not numeric")
+  if(!is.numeric(raw_data)) stop("Provided input is not numeric") ||
+  if(!(any(raw_data) == 0 && any(raw_data) == 255)) raw_data / 255 ||
+  if(length(raw_data) != 3) stop("Make sure your raw data comprises of the row, columns and RGB arrays") ||
+  if(raw_data[3] != 3) stop("Make sure your raw data is in 3 arrays each for R,G, and B values")
 
   # plot image
   raw_data_green <- t(raw_data[,,2])#  greem channel
