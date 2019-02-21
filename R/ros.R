@@ -38,8 +38,9 @@ apply_threshold <- function(raw_data)
 
   if(!is.numeric(raw_data)) stop("Provided input is not numeric") ||
   if(length(dim(raw_data)) != 3) stop("Make sure your raw data comprises of the row, columns and RGB arrays") ||
-  if (dim(raw_data)[3] != 3) stop("Make sure your raw data is in 3 arrays each for R,G, and B values") ||
-  ifelse (raw_data <= 255, raw_data/255, stop("Invalid RGB Values"))
+  if (dim(raw_data)[3] != 3) stop("Make sure your raw data is in 3 arrays each for R,G, and B values")
+
+  ifelse (raw_data <= 255, raw_data <- raw_data/255, stop("Invalid RGB Values"))
 
   # plot image
   raw_data_green <- t(raw_data[,,2])#  greem channel
@@ -91,6 +92,5 @@ apply_threshold <- function(raw_data)
       }
     }
   }
-  View(raw_data)
-  #return(thresh_data)
+  return(thresh_data)
 }
