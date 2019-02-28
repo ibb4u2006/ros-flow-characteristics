@@ -36,11 +36,15 @@ install_load(c("jpeg"))
 apply_threshold <- function(raw_data)
   {
 
-  if(!is.numeric(raw_data)) stop("Provided input is not numeric") ||
-  if(length(dim(raw_data)) != 3) stop("Make sure your raw data comprises of the row, columns and RGB arrays") ||
+  if(!is.numeric(raw_data)) stop("Provided input is not numeric")
+  if(length(dim(raw_data)) != 3) stop("Make sure your raw data comprises of the row, columns and RGB arrays")
   if (dim(raw_data)[3] != 3) stop("Make sure your raw data is in 3 arrays each for R,G, and B values")
 
-  ifelse (raw_data <= 255, raw_data <- raw_data/255, stop("Invalid RGB Values"))
+  if (raw_data <= 1 && raw_data >= 0){
+
+  } else {
+    ifelse (raw_data <= 255 && raw_data >= 0, raw_data <- raw_data/255, stop("Invalid RGB Values"))
+  }
 
   # plot image
   raw_data_green <- t(raw_data[,,2])#  greem channel
@@ -93,4 +97,30 @@ apply_threshold <- function(raw_data)
     }
   }
   return(thresh_data)
+}
+
+identify_struct <- function(thresh_data) {
+  dimensions <- dim(thresh_data)
+  # To Identify Capilarry Barriers
+    # Convert the data from apply_threshold to Data Frame
+    main_data <- as.data.frame(thresh_data)
+    # Create extra columns for the groups of neighbouring blues in all the columns
+    # The columns are automatically named as V1 - V(number of columns)
+    # Initiate the group with "Not a capillary barrier group"
+    # Denote the initiation with NCG
+    main_data$group_V1 <- 'NCG'
+    # set j equal to the numeric value of the initialized group
+    j <- 0
+    # In the first column, Check for all the medium and dark neighbouring blues
+        ifelse((main_data[2:dimensions[1],1] != 0) &&
+                 (main_data[2:dimensions[1],1 != 1]) &&
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1] |
+                 main_data[2:dimensions[1],1] == (main_data[2:dimensions[1]-1,1]+2) |
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]+3) |
+                 main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1] |
+                 main_data[2:dimensions[1],1] == (main_data[2:dimensions[1]+1,1]+2) |
+                 main_data[2:dimensions[1],] == (main_data[2:dimensions[1]+1,1]+3)),
+               NA, j <- j+1)
+
+        main_data$group_V1[k] <- j
 }
