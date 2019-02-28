@@ -122,5 +122,5 @@ identify_struct <- function(thresh_data) {
                  main_data[2:dimensions[1],] == (main_data[2:dimensions[1]+1,1]+3)),
                NA, j <- j+1)
 
-        main_data$group_V1[k] <- j
+        main_data$group_V1[2:dimensions[1]] <- j
 }
