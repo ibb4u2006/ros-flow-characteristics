@@ -114,12 +114,12 @@ identify_struct <- function(thresh_data) {
     # In the first column, Check for all the medium and dark neighbouring blues
         ifelse((main_data[2:dimensions[1],1] != 0) &&
                  (main_data[2:dimensions[1],1 != 1]) &&
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1] |
-                 main_data[2:dimensions[1],1] == (main_data[2:dimensions[1]-1,1]+2) |
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]) |
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]+2) |
                  (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]+3) |
-                 main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1] |
-                 main_data[2:dimensions[1],1] == (main_data[2:dimensions[1]+1,1]+2) |
-                 main_data[2:dimensions[1],] == (main_data[2:dimensions[1]+1,1]+3)),
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1]) |
+                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1]+2) |
+                 (main_data[2:dimensions[1],] == main_data[2:dimensions[1]+1,1]+3),
                NA, j <- j+1)
 
         main_data$group_V1[2:dimensions[1]] <- j
