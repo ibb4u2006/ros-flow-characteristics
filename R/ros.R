@@ -99,6 +99,39 @@ apply_threshold <- function(raw_data)
   return(thresh_data)
 }
 
+blue_distribution <- function(thresh_data) {
+  all_pixels <- as.data.frame(which(thresh_data == 0 | thresh_data == 1 | thresh_data == 2 | thresh_data == 3))
+  total_pixels <- dim(all_pixels)[1]
+  colnames(all_pixels) <- 'all_pixels'
+  all_blues <- as.data.frame(which(thresh_data == 1 | thresh_data == 2 | thresh_data == 3))
+  colnames(all_blues) <- 'all_blues'
+  total_blues <- dim(all_blues)[1]
+  blue_distr <- (total_blues / total_pixels) * 100
+
+  #Light Blue
+  light_blues <- as.data.frame(which(thresh_data == 1))
+  colnames(light_blues) <- 'light_blues'
+  light_blues <- dim(light_blues)[1]
+  light_blue_distr <- (light_blues / total_pixels) * 100
+
+  #Medium Blue
+  medium_blues <- as.data.frame(which(thresh_data == 2))
+  colnames(medium_blues) <- 'medium_blues'
+  medium_blues <- dim(medium_blues)[1]
+  medium_blue_distr <- (medium_blues / total_pixels) * 100
+
+  #Dark Blue
+  dark_blues <- as.data.frame(which(thresh_data == 3))
+  colnames(dark_blues) <- 'dark_blues'
+  dark_blues <- dim(dark_blues)[1]
+  dark_blue_distr <- (dark_blues / total_pixels) * 100
+
+  return(paste("Distribution of all blues =", blue_distr, "%,",
+               "Distribution of light blues =", light_blue_distr, "%,",
+               "Distribution of medium blues =", medium_blue_distr, "%,",
+               "Distribution of dark blues =", dark_blue_distr, "%"))
+}
+
 identify_struct <- function(thresh_data) {
   dimensions <- dim(thresh_data)
   # To Identify Capilarry Barriers
@@ -108,19 +141,25 @@ identify_struct <- function(thresh_data) {
     # The columns are automatically named as V1 - V(number of columns)
     # Initiate the group with "Not a capillary barrier group"
     # Denote the initiation with NCG
-    main_data$group_V1 <- 'NCG'
+    # main_data$group_V1 <- 'NCG'
+
+    main_col <- paste0(rep("group_V", ncol(main_data)), 1:ncol(main_data))
+    main_data[main_col] <- -999
+    #main_data$
     # set j equal to the numeric value of the initialized group
     j <- 0
     # In the first column, Check for all the medium and dark neighbouring blues
-        ifelse((main_data[2:dimensions[1],1] != 0) &&
-                 (main_data[2:dimensions[1],1 != 1]) &&
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]) |
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]+2) |
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]-1,1]+3) |
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1]) |
-                 (main_data[2:dimensions[1],1] == main_data[2:dimensions[1]+1,1]+2) |
-                 (main_data[2:dimensions[1],] == main_data[2:dimensions[1]+1,1]+3),
-               NA, j <- j+1)
-
-        main_data$group_V1[2:dimensions[1]] <- j
+    for (i in 1:dimensions[2]) {
+      tmp_logic <- main_data[,i] != 0 & main_data[,i] != 1 &(
+        main_data[1:(dimensions[1]-1),i] == main_data[2:dimensions[1],i] |
+          main_data[1:(dimensions[1]-2),i] == main_data[3:dimensions[1],i] |
+          main_data[1:(dimensions[1]-3),i] == main_data[4:dimensions[1],i] |
+          main_data[2:dimensions[1],i] == main_data[1:(dimensions[1]-1),i] |
+          main_data[3:dimensions[1],i] == main_data[1:(dimensions[1]-2),i] |
+          main_data[4:dimensions[1],i] == main_data[1:(dimensions[1]-3),i]
+      )
+      ifelse(tmp_logic,
+             main_data[tmp_logic,i+333] <- j, j <- j+1)
+#      main_data[main_col] <- j
+    }
 }
