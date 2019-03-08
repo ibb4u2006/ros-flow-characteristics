@@ -1,19 +1,3 @@
-# Install and Load Packages
-install_load <- function(packages){
-  k <- packages[!(packages %in% installed.packages()
-                  [,"Package"])];
-  if(length(k))
-  {
-    install.packages(k, repos = 'https://cran.rstudio.com/');
-  }
-
-  for (package_name in packages) {
-    library(package_name, character.only = TRUE, quietly = TRUE);
-  }
-}
-
-install_load(c("jpeg"))
-
 #' Image Processing of flow characteristics of rain-on-snow experiments
 #'
 #' Input data must be in matrix where the length of the matrix is 3 (rows, columns, three arrays)
@@ -28,9 +12,31 @@ install_load(c("jpeg"))
 #' ## To process raw image
 #' raw_image <- readJPEG('path to image')
 #' ## Apply threshold to the raw image data
-#' apply_threshold(raw_image)
+#' apply_threshold(raw_data = raw_image)
+#' ## To find the distribution of blues
+#' threshold_data <- apply_threshold(raw_data = raw_image)
+#' blue_distribution(thresh_data = threshold_data)
+#' ## To plot the fractions of blue (all, dark blue, medium blue or light blue)
+#' ## color accross the depth of the raw image
+#' threshold_data <- apply_threshold(raw_data = raw_image)
+#' By default blue_selections = 'all' for all blue fractions
+#' blue_selections = 'dark blue' for dark blue fractions
+#' blue_selections = 'medium blue' for medium blue fractions
+#' blue_selections = 'light blue' for ligth blue fractions
+#' Export the plot to your local disk
+#' my_plot <- file.path("path to save the plotted image")
+#' depth_blue_fractions(thresh_data = threshold_data, blue_selections = 'all', plot_path = my_plot)
+#' #' ## To plot the fractions of blue (all, dark blue, medium blue or light blue)
+#' ## color accross the length of the raw image
+#' threshold_data <- apply_threshold(raw_data = raw_image)
+#' By default blue_selections = 'all' for all blue fractions
+#' blue_selections = 'dark blue' for dark blue fractions
+#' blue_selections = 'medium blue' for medium blue fractions
+#' blue_selections = 'light blue' for ligth blue fractions
+#' Export the plot to your local disk
+#' my_plot <- file.path("path to save the plotted image")
+#' length_blue_fractions(thresh_data = threshold_data, blue_selections = 'all', plot_path = my_plot)
 #'
-#' @import jpeg
 #' @export
 
 apply_threshold <- function(raw_data)
@@ -126,10 +132,86 @@ blue_distribution <- function(thresh_data) {
   dark_blues <- dim(dark_blues)[1]
   dark_blue_distr <- (dark_blues / total_pixels) * 100
 
-  return(paste("Distribution of all blues =", blue_distr, "%,",
-               "Distribution of light blues =", light_blue_distr, "%,",
-               "Distribution of medium blues =", medium_blue_distr, "%,",
-               "Distribution of dark blues =", dark_blue_distr, "%"))
+  result <- rbind(c("all blue [%]", blue_distr),
+                  c("light  blue [%]", light_blue_distr),
+                  c("medium blue [%]", medium_blue_distr),
+                  c("dark blue [%]", dark_blue_distr))
+  print(paste("Distribution of all blues =", blue_distr, "%,",
+        "Distribution of light blues =", light_blue_distr, "%,",
+        "Distribution of medium blues =", medium_blue_distr, "%,",
+        "Distribution of dark blues =", dark_blue_distr, "%"))
+
+  return(result)
+}
+
+depth_blue_fractions <- function(thresh_data, blue_selection = 'all', plot_path){
+  thresh_data_tmp <- thresh_data
+  if(blue_selection == "all"){
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 2 | thresh_data == 3] <- 1
+    main_title <- "all blues"
+  }
+  if (blue_selection == "dark blue"){
+    thresh_data_tmp[thresh_data == 3] <- 1
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 2] <- 0
+    main_title <- "dark blues"
+  }
+  if (blue_selection == "medium blue"){
+    thresh_data_tmp[thresh_data == 2] <- 1
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 3] <- 0
+    main_title <- "medium blues"
+  }
+  if (blue_selection == "light blue"){
+    thresh_data_tmp[thresh_data == 1] <- 1
+    thresh_data_tmp[thresh_data == 2 | thresh_data == 3] <- 0
+    main_title <- "light blues"
+  }
+  data_mean <- as.data.frame(rev(1:ncol(thresh_data_tmp)))
+  colnames(data_mean) <- "Depth"
+  data_mean$Bluefraction <- colMeans(thresh_data_tmp)
+  png(plot_path)
+  plot(data_mean$Bluefraction,rev(1:ncol(thresh_data_tmp)),
+       type = "l", col = "royalblue2",
+       xlab = " Blue color fraction",
+       ylab = " Depth [Pixel]",
+       main = main_title)
+  dev.off()
+  result <- rbind(c("Blue Fraction Variance", var(data_mean$Bluefraction)))
+  return(result)
+}
+
+length_blue_fractions <- function(thresh_data, blue_selection = 'all'){
+  thresh_data_tmp <- thresh_data
+  if(blue_selection == "all"){
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 2 | thresh_data == 3] <- 1
+    main_title <- "all blues"
+  }
+  if (blue_selection == "dark blue"){
+    thresh_data_tmp[thresh_data == 3] <- 1
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 2] <- 0
+    main_title <- "dark blues"
+  }
+  if (blue_selection == "medium blue"){
+    thresh_data_tmp[thresh_data == 2] <- 1
+    thresh_data_tmp[thresh_data == 1 | thresh_data == 3] <- 0
+    main_title <- "medium blues"
+  }
+  if (blue_selection == "light blue"){
+    thresh_data_tmp[thresh_data == 1] <- 1
+    thresh_data_tmp[thresh_data == 2 | thresh_data == 3] <- 0
+    main_title <- "light blues"
+  }
+  data_mean <- as.data.frame(rev(1:nrow(thresh_data_tmp)))
+  colnames(data_mean) <- "Length"
+  data_mean$Bluefraction <- rowMeans(thresh_data_tmp)
+  png(plot_path)
+  plot(data_mean$Bluefraction,rev(1:nrow(thresh_data_tmp)),
+       type = "l", col = "royalblue2",
+       xlab = " Blue color fraction",
+       ylab = " Length [Pixel]",
+       main = main_title)
+  dev.off()
+  result <- rbind(c("Blue Fraction Variance", var(data_mean$Bluefraction)))
+  return(result)
 }
 
 identify_struct <- function(thresh_data) {

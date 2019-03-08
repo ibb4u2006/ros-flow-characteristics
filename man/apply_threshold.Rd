@@ -18,7 +18,30 @@ Returns RDS data of the input
 ## To process raw image
 raw_image <- readJPEG('path to image')
 ## Apply threshold to the raw image data
-apply_threshold(raw_image)
+apply_threshold(raw_data = raw_image)
+## To find the distribution of blues
+threshold_data <- apply_threshold(raw_data = raw_image)
+blue_distribution(thresh_data = threshold_data)
+## To plot the fractions of blue (all, dark blue, medium blue or light blue)
+## color accross the depth of the raw image
+threshold_data <- apply_threshold(raw_data = raw_image)
+By default blue_selections = 'all' for all blue fractions
+blue_selections = 'dark blue' for dark blue fractions
+blue_selections = 'medium blue' for medium blue fractions
+blue_selections = 'light blue' for ligth blue fractions
+Export the plot to your local disk
+my_plot <- file.path("path to save the plotted image")
+depth_blue_fractions(thresh_data = threshold_data, blue_selections = 'all', plot_path = my_plot)
+#' ## To plot the fractions of blue (all, dark blue, medium blue or light blue)
+## color accross the length of the raw image
+threshold_data <- apply_threshold(raw_data = raw_image)
+By default blue_selections = 'all' for all blue fractions
+blue_selections = 'dark blue' for dark blue fractions
+blue_selections = 'medium blue' for medium blue fractions
+blue_selections = 'light blue' for ligth blue fractions
+Export the plot to your local disk
+my_plot <- file.path("path to save the plotted image")
+length_blue_fractions(thresh_data = threshold_data, blue_selections = 'all', plot_path = my_plot)
 
 }
 \author{
